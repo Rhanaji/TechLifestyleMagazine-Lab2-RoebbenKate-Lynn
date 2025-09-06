@@ -1,0 +1,174 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script> <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - My Magazine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header id="site-header">
+    <img src="images/logo.jpg" alt="Tech & Lifestyle Weekly Logo" class="logo">
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="articles.html">Articles</a></li>
+        <li><a href="#">Lifestyle</a></li>
+        <li><a href="#">Tech</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Contact Us</h1>
+      <p class="intro">We'd love to hear from you. Get in touch with our team below.</p>
+    </div>
+  </section>
+
+  <!-- Location Section -->
+  <section class="location">
+    <h2>Our Location</h2>
+    <p>123 Rue des jevois desrats, Ratatouille, France</p>
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d2624.3435496381726!2d2.342556!3d48.870727!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sph!4v1756965614351!5m2!1sen!2sph" 
+      width="100%" height="400" 
+      allowfullscreen 
+      loading="lazy" 
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </section>
+
+  <!-- Management Team Section -->
+  <section class="team">
+    <div class="profile-card heading-card" style="background-image:url('images/hero.jpg');">
+      <h2 class="team-heading">Our Management</h2>
+    </div>
+      <div class="profile-card" style="background-image:url('images/hero.jpg');">
+          <img src="images/contacts/remy.jpg" alt="Remy - CEO" class="profile-pic">
+        <div class="profile-info">
+            <h3>Remy</h3>
+            <h5>Chief Executive Officer</h5>
+            <p>As Chief Executive Officer, Remy oversees strategy, operations, and taste-testing. Known for turning challenges into more challenging problems, he brings sweat and tears and flavor to every cable he touches.</p>
+          <div class="contacts">
+            <p><a href="mailto:remy@magazine.com">📧 Email: remy@magazine.com</a></p>
+            <p><a href="tel:+33123456789">📞 Call: +33123456789</a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-card" style="background-image:url('images/hero.jpg');">
+          <img src="images/contacts/johnwick.jpg" alt="John Wick - Operations Officer" class="profile-pic">
+        <div class="profile-info">
+            <h3>John Wick</h3>
+            <h5>Operations Officer</h5>
+            <p>If there's one thing John takes seriously, it's discipline. Every task is handled with focus, precision, and… occasionally, scars to show for it.</p>
+          <div class="contacts">
+            <a href="mailto:john@magazine.com">📧 Email: john@magazine.com</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-card" style="background-image:url('images/hero.jpg');">
+          <img src="images/contacts/chamber.jpg" alt="Chamber - Chief Design Officer" class="profile-pic">
+        <div class="profile-info">
+            <h3>Vincent Fabron</h3>
+            <h5>Chief Design Officer</h5>
+            <p>Chamber oversees aesthetics and design with the same care he applies to every shot: flawlessly. He ensures the company not only performs at its best but also looks its best.</p>
+          <div class="contacts">
+            <a href="mailto:chamber@magazine.com">📧 Email: chamber@magazine.com</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-card" style="background-image:url('images/hero.jpg');">
+        <img src="images/contacts/pringles.jpg" alt="Mr. Pringles - Food & Lifestyle Editor" class="profile-pic">
+       <div class="profile-info">
+          <h3>Mr. Pringles</h3>
+            <h5>Food & Lifestyle Editor</h5>
+            <p>Who better to curate taste than the man who's been seasoning lives for decades? With his instantly recognizable face and timeless mustache, Mr. Pringles ensures our brand presence is always fresh, stacked, and unforgettable.</p>
+          <div class="contacts">
+            <p><a href="mailto:pringles@magazine.com">📧 Email: pringles@magazine.com</a></p>
+            <p><a href="tel:800-568-4035">📞 Call: 800-568-4035</a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-card" style="background-image:url('images/hero.jpg');">
+          <img src="images/contacts/reyna.jpg" alt="Reyna - Editor-in-chief" class="profile-pic">
+        <div class="profile-info">
+            <h3>Zyanya Mondragón</h3>
+            <h5>Editor-in-Chief</h5>
+            <p>Reyna demands excellence in every aspect of the magazine, channeling the same intensity. She insisted her profile photo capture her 'dominant side' — and let's just say, nobody argued.</p>
+          <div class="contacts">
+            <a href="mailto:reyna@magazine.com">📧 Email: reyna@magazine.com</a>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <!-- Contact Form Section -->
+  <section class="contact-form">
+    <h2>Get in Touch</h2>
+    <form action="#" method="post">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" placeholder="Your full name" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required>
+
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" rows="6" placeholder="Write your message..." required></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer id="site-footer">
+    <p>&copy; 2025 Tech & Lifestyle Weekly. All rights reserved.</p>
+  </footer>
+</body>
+</html>
